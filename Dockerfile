@@ -4,6 +4,14 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
+# --- NEW SECTION: Install system dependencies ---
+# Install ffmpeg for pydub and libgl1 for opencv-python
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+# --- END NEW SECTION ---
+
 # Copy the requirements file and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
