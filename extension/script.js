@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     youtubeView.classList.add('hidden');
                     loadingView.classList.remove('hidden');
                     try {
-                        const response = await fetch('http://127.0.0.1:8000/v2/analyze_video', {
+                        const response = await fetch('https://truth-guard-ai-309053470356.asia-south1.run.app/v2/analyze_video', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ url: currentTab.url }),
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     try {
                         
-                        const response = await fetch('http://127.0.0.1:8000/v2/analyze', {
+                        const response = await fetch('https://truth-guard-ai-309053470356.asia-south1.run.app/v2/analyze', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function analyzeImage(imageUrl) {
     const loadingView = document.getElementById('loading-view');
     try {
-        const response = await fetch('http://127.0.0.1:8000/v2/analyze_image', {
+        const response = await fetch('https://truth-guard-ai-309053470356.asia-south1.run.app/v2/analyze_image', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image_url: imageUrl }),

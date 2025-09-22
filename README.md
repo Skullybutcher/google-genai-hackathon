@@ -11,7 +11,22 @@ TruthGuard AI is a sophisticated browser extension that serves as a real-time "N
 Our project is fully deployed and live!
 
 * **Frontend (Browser Extension):**
+    
     [![Get it for Firefox](https://img.shields.io/badge/Get_it_for-Firefox-FF7139?style=for-the-badge&logo=firefox)](https://addons.mozilla.org/en-US/firefox/addon/truthguard-ai/)
+
+    **Chrome (Sideload from `.crx` file):** [`extension.crx`](./extension.crx)
+
+    <details>
+    <summary>Click here for Chrome installation instructions</summary>
+
+    1. Download the `TruthGuardAI.crx` file from this repository (or use [`extension.crx`](./extension.crx)).
+    2. Open Chrome and navigate to `chrome://extensions`.
+    3. Enable **Developer mode** using the toggle in the top-right corner.
+    4. Drag and drop the downloaded `.crx` file onto the extensions page.
+    5. When prompted, click **Add extension** to confirm the installation.
+
+    </details>
+
 * **Backend (Live API):**
     [![Backend API](https://img.shields.io/badge/Backend_API-Live-4285F4?style=for-the-badge&logo=google-cloud)](https://truth-guard-ai-309053470356.asia-south1.run.app/)
 
