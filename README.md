@@ -10,11 +10,11 @@ TruthGuard AI is a sophisticated browser extension that serves as a real-time "N
 
 Our project is fully deployed and live!
 
-* **Frontend (Browser Extension):**
-    
-    [![Get it for Firefox](https://img.shields.io/badge/Get_it_for-Firefox-FF7139?style=for-the-badge&logo=firefox)](https://addons.mozilla.org/en-US/firefox/addon/truthguard-ai/)
+* **Frontend (Web App):** `https://gen-lang-client-0860021451.web.app/`
 
-    **Chrome (Sideload from `.crx` file):** [`extension.crx`](./extension.crx)
+* **Browser Extension (Chrome):**
+
+    **Sideload from `.crx` file:** [`extension.crx`](./extension.crx)
 
     <details>
     <summary>Click here for Chrome installation instructions</summary>
@@ -57,7 +57,7 @@ Our system is a scalable, three-tier architecture **deployed on Google Cloud**.
 **(You can create a simple diagram based on the description below and insert the image here)**
 
 
-1.  **Frontend (Client):** A Chrome/Firefox Browser Extension built with HTML, CSS, and JavaScript.
+1.  **Frontend (Client):** A Chrome Browser Extension and a web app (Firebase Hosting) built with HTML, CSS, and JavaScript.
 2.  **Backend (Server):** A Python **FastAPI** server, deployed on **Google Cloud Run** for automatic scaling.
 3.  **Intelligence Layer (Tools & Models):**
     * **Google Gemini API (1.5 Pro & Flash):** For primary content analysis and vision.
@@ -108,6 +108,6 @@ pip freeze > requirements.txt
 * Run the server: `uvicorn main:app --reload`
 
 ### **3. Frontend Setup**
-* Open your browser (Chrome/Firefox) and navigate to the extensions page (`chrome://extensions` or `about:debugging`).
+* Open your browser (Chrome) and navigate to the extensions page (`chrome://extensions`).
 * Enable "Developer mode".
-* Click "Load unpacked" (or "Load Temporary Add-on") and select the `extension` folder from this repository.
+* Click "Load unpacked" and select the `extension` folder from this repository.
