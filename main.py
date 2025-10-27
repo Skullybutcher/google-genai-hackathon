@@ -181,6 +181,7 @@ async def run_full_analysis(text: str, url: str):
         topic_task, claims_task, bias_task, whois_task, wiki_task
     )
     
+    
     news_context_task = get_news_context(topic)
     
     source_age = "Unknown" 
