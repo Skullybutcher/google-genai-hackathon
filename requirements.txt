@@ -19,3 +19,4 @@ python-whois
 Wikipedia-API
 newsapi-python
 google-cloud-vision 
+aiohttp
