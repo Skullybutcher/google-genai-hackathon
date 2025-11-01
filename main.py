@@ -121,7 +121,7 @@ load_dotenv()
 print(f"GCS_BUCKET_NAME loaded: {os.environ.get('GCS_BUCKET_NAME', 'NOT SET')}")
 
 # --- CORS (added back from original) ---
-origins = ["*"]
+origins = ["*", "https://gen-lang-client-0860021451.web.app"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
