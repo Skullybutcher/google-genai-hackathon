@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "contextMenus" 
+    "contextMenus",
+    "storage"
   ],
   "host_permissions": [
     "https://truth-guard-ai-309053470356.asia-south1.run.app/*"
@@ -22,5 +23,11 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "externally_connectable": {
+    "matches": [
+      "https://gen-lang-client-0860021451.web.app/*",
+      "https://gen-lang-client-0860021451.firebaseapp.com/*"
+    ]
   }
 }

@@ -30,8 +30,32 @@ from PIL import Image
 from video_analyzer import update_working_proxies,analyze_video_url,download_video,get_visual_context
 
 # Initialize Firebase Admin SDK
-#cred = credentials.Certificate("path/to/your/firebase-service-account.json")  # Replace with actual path or env var
-firebase_admin.initialize_app()
+try:
+    # Check if already initialized
+    if firebase_admin._apps:
+        print("⚠️ Firebase Admin already initialized")
+        # Get the current app to check project
+        app = firebase_admin._apps.get('[DEFAULT]')
+        if app:
+            print(f"✅ Firebase project: {app.project_id}")
+    else:
+        # Try to initialize with default credentials (works on Cloud Run with service account)
+        # Specify the project ID to match the frontend's Firebase project
+        default_app = firebase_admin.initialize_app()
+        print("✅ Firebase Admin SDK initialized successfully")
+        print(f"✅ Firebase project: {default_app.project_id}")
+except Exception as e:
+    # Check if it's the "already initialized" error
+    if "already been initialized" in str(e):
+        print("⚠️ Firebase Admin already initialized (expected if reloading)")
+        app = firebase_admin._apps.get('[DEFAULT]')
+        if app:
+            print(f"✅ Firebase project: {app.project_id}")
+    else:
+        print(f"❌ Firebase Admin initialization error: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 db = firestore.AsyncClient()
 
@@ -45,28 +69,39 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     This is the "lock" for our API.
     """
     try:
-        # Verify the JWT token with Firebase
-        decoded_token = auth.verify_id_token(credentials.credentials)
+        print(f"🔍 Received auth request with token prefix: {credentials.credentials[:20]}...")
+        # Verify the JWT token with Firebase (run sync function in thread pool)
+        decoded_token = await asyncio.to_thread(auth.verify_id_token, credentials.credentials)
         uid = decoded_token['uid']
+        print(f"✅ Token verified for user: {uid}, email: {decoded_token.get('email', 'N/A')}")
 
         # Fetch user data from Firestore to get tier
         user_doc_ref = db.collection('users').document(uid)
         user_doc = await user_doc_ref.get()
 
         if not user_doc.exists:
+            print(f"⚠️ User {uid} not found in Firestore")
             raise HTTPException(status_code=401, detail="User not found")
 
         user_data = user_doc.to_dict()
         tier = user_data.get("tier", "free")  # Default to free if no tier set
+        print(f"✅ User {uid} authenticated with tier: {tier}")
 
         return {"uid": uid, "tier": tier}
 
-    except auth.InvalidIdTokenError:
+    except auth.InvalidIdTokenError as e:
+        print(f"❌ Invalid ID token: {e}")
         raise HTTPException(status_code=401, detail="Invalid authentication token")
-    except auth.ExpiredIdTokenError:
+    except auth.ExpiredIdTokenError as e:
+        print(f"❌ Expired ID token: {e}")
         raise HTTPException(status_code=401, detail="Token has expired")
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
-        print(f"Auth error: {e}")
+        print(f"❌ Auth error (type: {type(e).__name__}): {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail="Could not validate authentication")
 
 
@@ -149,7 +184,9 @@ except Exception as e:
     mlb = None
 
 # --- Pydantic Models ---
-class V2AnalysisRequest(BaseModel): text: str; url: str
+class V2AnalysisRequest(BaseModel):
+    text: str
+    url: str = ""  # Make url optional with empty string as default
 class V2VideoAnalysisRequest(BaseModel): url: str
 class V2ImageAnalysisRequest(BaseModel): image_url: str
 
@@ -391,7 +428,11 @@ async def run_full_analysis(text: str, url: str):
     """
     Agentic analysis pipeline: Plan -> Select & Run Tools -> Final Reasoning
     """
-    domain = tldextract.extract(url).registered_domain
+    # Handle empty URL (for text-only analysis)
+    if url and url.strip():
+        domain = tldextract.extract(url).registered_domain
+    else:
+        domain = "unknown-source.local"
 
     # 1) Planning: classify text and get topic
     category, topic = await get_text_category_and_topic(text)

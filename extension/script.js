@@ -1,9 +1,19 @@
 // script.js (Manifest V3)
-// In a real product, the user would log in and you'd store this securely.
-const API_KEY = "fYL8x7T3EQ2Oovm7mZyU";
 // Use localhost for local development, production gateway for deployed version
 const API_GATEWAY_URL = "https://truthguardai-gateway-3xz6gfx0.an.gateway.dev"
 
+// Function to get the Firebase auth token from storage
+async function getAuthToken() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['firebaseAuthToken'], (result) => {
+            if (result.firebaseAuthToken) {
+                resolve(result.firebaseAuthToken);
+            } else {
+                reject(new Error('No authentication token found. Please log in to the TruthGuard web app first.'));
+            }
+        });
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Get references to all the UI sections
@@ -97,9 +107,15 @@ async function performAnalysis(type, body) {
         image: `${API_GATEWAY_URL}/v2/analyze_image` };
 
     try {
+        // Get the Firebase auth token from storage
+        const token = await getAuthToken();
+        
         const response = await fetch(endpoints[type], {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify(body),
         });
         if (!response.ok) {

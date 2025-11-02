@@ -12,6 +12,13 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
+// Declare chrome types for TypeScript
+declare global {
+  interface Window {
+    chrome?: any;
+  }
+}
+
 interface AuthUser {
   id: string;
   email: string;
@@ -38,7 +45,54 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper function to send token to extension
+  const sendTokenToExtension = async (token: string | null) => {
+    try {
+      // Get the extension ID from localStorage if we've saved it
+      const savedExtensionId = localStorage.getItem('truthguard_extension_id');
+      
+      // Check if Chrome runtime APIs are available
+      if (typeof window.chrome === 'undefined' || !window.chrome.runtime || !window.chrome.runtime.sendMessage) {
+        console.log('Chrome extension APIs not available');
+        return;
+      }
 
+      // Try common extension ID patterns or saved ID
+      const extensionIds = savedExtensionId ? [savedExtensionId] : [];
+      
+      if (!token) {
+        // Send logout message
+        for (const id of extensionIds) {
+          try {
+            window.chrome.runtime.sendMessage(id, { type: 'FIREBASE_LOGOUT' }, (response: any) => {
+              if (response && response.success) {
+                console.log('✅ Logout message sent to extension');
+              }
+            });
+          } catch (e) {
+            // Extension not found, ignore
+          }
+        }
+        return;
+      }
+
+      // Send token to extension
+      for (const id of extensionIds) {
+        try {
+          window.chrome.runtime.sendMessage(id, { type: 'FIREBASE_AUTH_TOKEN', token }, (response: any) => {
+            if (response && response.success) {
+              console.log('✅ Token sent to extension');
+            }
+          });
+        } catch (e) {
+          console.log('Extension not found or not responding');
+        }
+      }
+    } catch (e) {
+      // Not in a Chrome extension context or extension not installed
+      console.log('Could not send message to extension');
+    }
+  };
 
   useEffect(() => {
     // Listen for auth changes
@@ -74,7 +128,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     });
 
-    return unsubscribe;
+    // Also listen for ID token changes to send to extension
+    const unsubscribeToken = onIdTokenChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const token = await firebaseUser.getIdToken();
+        await sendTokenToExtension(token);
+      } else {
+        await sendTokenToExtension(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeToken();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, name?: string) => {

@@ -1,6 +1,6 @@
 import { auth } from './firebase';
 
-const API_BASE_URL = (import.meta as any).env?.MODE === 'development' ? 'http://localhost:8000' : 'https://truthguardai-gateway-3xz6gfx0.an.gateway.dev';
+const API_BASE_URL = (import.meta as any).env?.MODE === 'development' ? 'http://localhost:8000' : '/api';
 
 interface ApiResponse<T> {
   data?: T;
@@ -16,8 +16,8 @@ class ApiService {
         console.error('❌ No user authenticated');
         return { error: 'User not authenticated' };
       }
-      const idToken = await user.getIdToken();
-      console.log(`🔍 Sending request to ${API_BASE_URL}${endpoint} with token prefix: ${idToken.substring(0, 20)}...`);
+      const idToken = await user.getIdToken(true); // Force refresh to ensure valid token
+      console.log(`🔍 Sending request to ${API_BASE_URL}${endpoint} with refreshed token prefix: ${idToken.substring(0, 20)}...`);
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
@@ -69,7 +69,7 @@ class ApiService {
       if (!user) {
         return { error: 'User not authenticated' };
       }
-      const idToken = await user.getIdToken();
+      const idToken = await user.getIdToken(true); // Force refresh to ensure valid token
 
       const formData = new FormData();
       formData.append('file', file);
