@@ -41,7 +41,7 @@ try:
     else:
         # Try to initialize with default credentials (works on Cloud Run with service account)
         # Specify the project ID to match the frontend's Firebase project
-        default_app = firebase_admin.initialize_app()
+        default_app = firebase_admin.initialize_app(options={'projectId': 'gen-lang-client-0860021451'})
         print("✅ Firebase Admin SDK initialized successfully")
         print(f"✅ Firebase project: {default_app.project_id}")
 except Exception as e:

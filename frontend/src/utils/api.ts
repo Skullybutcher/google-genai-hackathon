@@ -1,6 +1,6 @@
 import { auth } from './firebase';
 
-const API_BASE_URL = (import.meta as any).env?.MODE === 'development' ? 'http://localhost:8000' : '/api';
+const API_BASE_URL = (import.meta as any).env?.MODE === 'development' ? 'http://localhost:8000' : 'https://truth-guard-ai-309053470356.asia-south1.run.app';
 
 interface ApiResponse<T> {
   data?: T;

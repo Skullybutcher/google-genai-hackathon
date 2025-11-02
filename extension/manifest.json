@@ -10,7 +10,8 @@
     "storage"
   ],
   "host_permissions": [
-    "https://truth-guard-ai-309053470356.asia-south1.run.app/*"
+    "https://truth-guard-ai-309053470356.asia-south1.run.app/*",
+    "https://truthguardai-gateway-3xz6gfx0.an.gateway.dev/*"
   ],
   "background": {
     "service_worker": "background.js"

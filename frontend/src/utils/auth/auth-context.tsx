@@ -58,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       // Try common extension ID patterns or saved ID
-      const extensionIds = savedExtensionId ? [savedExtensionId] : [];
+      const extensionIds = savedExtensionId ? [savedExtensionId] : ['kmejojlkkncgfackkipfggbgkmcogmch'];
       
       if (!token) {
         // Send logout message

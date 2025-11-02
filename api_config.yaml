@@ -189,6 +189,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
         - in: body
           name: analysisRequest
           required: true
@@ -227,6 +231,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
         - in: body
           name: imageUploadRequest
           required: true
@@ -267,6 +275,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
         - in: body
           name: videoAnalysisRequest
           required: true
@@ -305,6 +317,10 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
         - in: body
           name: imageAnalysisRequest
           required: true

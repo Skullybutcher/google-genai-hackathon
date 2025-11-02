@@ -9,7 +9,7 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "destination": "https://truthguardai-gateway-3xz6gfx0.an.gateway.dev/api/**"
+        "destination": "https://truth-guard-ai-309053470356.asia-south1.run.app/**"
       },
       {
         "source": "**",

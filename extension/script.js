@@ -1,6 +1,6 @@
 // script.js (Manifest V3)
 // Use localhost for local development, production gateway for deployed version
-const API_GATEWAY_URL = "https://truthguardai-gateway-3xz6gfx0.an.gateway.dev"
+const API_GATEWAY_URL = "https://truth-guard-ai-309053470356.asia-south1.run.app"
 
 // Function to get the Firebase auth token from storage
 async function getAuthToken() {
