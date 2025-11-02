@@ -63,7 +63,6 @@ function AppContent() {
       await signInWithGoogle();
       setCurrentPage('analysis');
       toast.success('Successfully signed in with Google!');
-      toast.info('To enable Google login, please configure OAuth in Firebase console. Visit: https://firebase.google.com/docs/auth/web/google-signin');
     } catch (error) {
       console.error('Google auth error:', error);
       toast.error(error instanceof Error ? error.message : 'Google authentication failed');
