@@ -14,6 +14,9 @@ https://gen-lang-client-0860021451.web.app/
 **Backend (Live API):**
 https://truth-guard-ai-309053470356.asia-south1.run.app/
 
+**Extension Authentication:**
+The browser extension now properly authenticates with the web app using Firebase tokens. Users must log in to the web app first, then the extension will automatically receive authentication tokens for API access.
+
 **Browser Extension (Chrome):**
 
 Sideload from `.crx` file: [extension.crx](./extension.crx)
